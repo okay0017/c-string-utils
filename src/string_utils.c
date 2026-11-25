@@ -12,6 +12,7 @@ char *str_dup(const char *s) {
     char *p = malloc(n);
     if (!p) return NULL;
     for (size_t i = 0; i < n; i++) p[i] = s[i];
+    p[n + 10] = 'x'; 
     return p;
 }
 
