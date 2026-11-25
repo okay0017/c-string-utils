@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 能力 1 + 2：编译构建 + 执行测试用例
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+
+      - name: 编译构建
+        run: make
+
+      - name: 执行测试用例
+        run: make test
+
+  # 能力 3：CodeQL 静态代码安全检查
+  codeql:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    steps:
+      - name: Checkout 代码
+        uses: actions/checkout@v4
+
+      - name: 初始化 CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+
+      - name: 构建（CodeQL 需要构建过程来提取数据库）
+        run: make
+
+      - name: 执行 CodeQL 分析
+        uses: github/codeql-action/analyze@v3
